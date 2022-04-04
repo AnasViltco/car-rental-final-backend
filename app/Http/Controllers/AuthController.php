@@ -104,16 +104,23 @@ class AuthController extends Controller
 
     public function Login(Request $request) 
     {
+        // $data = $request->all();
+        // print_r($data); die;
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required'
         ]);
+        
+
         if ($validator->passes()) 
         {
             $email = $request->email;
             $password = $request->password;
                 //    return $password;
-                $user = RegisterUser::find($email);
+                $user = RegisterUser::where('email','=',$email)
+                ->where('password','=',$password)
+                ->first();
+              
                     $successData = [
                         "user" => $user
                     ];
@@ -132,6 +139,47 @@ class AuthController extends Controller
                 } 
        
     }
+
+    // public function Login(Request $request){
+    //     if($request->isMethod('post')){
+    //         $userData = $request->input();
+    //         $rules = [
+    //             'email' => 'required|email|exists:register_users',
+    //             'password' => 'required'
+    //         ];
+    //         $customMessages = [
+    //             'email.required' => 'Email is required',
+    //             'email.email' => 'Valid email is required',
+    //             'email.exists' => 'Email does not exists in database',
+    //             'password.required' => 'Password is required',
+    //         ];
+    //         $validator = Validator::make($userData, $rules, $customMessages);
+    //         if($validator->fails()){
+    //             return response()->json([
+    //                 $validator->errors()
+    //             ],422);
+    //         }
+    //         // Fetch User details
+    //         $userDetails = RegisterUser::where('email', $userData['email'])->first();
+    //         // Verify Password
+    //         if(password_verify($userData['password'],$userDetails->password)){
+    //             return response()->json([
+    //                 'status' => true,
+    //                 'message'=> 'User login successfully',
+    //                 'user' => $userDetails
+    //             ],200);
+    //         }
+    //         else{
+    //             return response()->json([
+    //                 'status' => false,
+    //                 'message' => "Password Incorrect!",
+    //             ],422);
+    //         }
+    //     }
+    // }
+
+
+
     
     public function logout(Request $request) {
         // dd($request);
