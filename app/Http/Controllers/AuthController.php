@@ -116,6 +116,24 @@ class AuthController extends Controller
         {
             $email = $request->email;
             $password = $request->password;
+
+            \DB::connection()->enableQuerylog();
+            if (Auth::attempt(['email' => $email, 'password' => $password]))
+            {
+                $user = Auth::user();
+                $token = $user->createToken('token-name', ['server:update'])->plainTextToken;  
+                return response()->json([
+                    'statusCode' => 200,
+                    'message' => 'User successfully Login',
+                    'successData' => $user,
+                    'token' =>$token
+
+                ], 200);
+            }
+            return \DB::getQuerylog();
+
+            return Auth::check($request->all());
+           
                 //    return $password;
                 $user = RegisterUser::where('email','=',$email)
                 ->where('password','=',$password)
@@ -124,11 +142,7 @@ class AuthController extends Controller
                     $successData = [
                         "user" => $user
                     ];
-                    return response()->json([
-                        'statusCode' => 200,
-                        'message' => 'User successfully Login',
-                        'successData' => $successData
-                    ], 200);
+                   
 
         }
                 else{
