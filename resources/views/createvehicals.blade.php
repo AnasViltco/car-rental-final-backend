@@ -1,7 +1,7 @@
 @extends('Master.sidebar')
 
 @section('createbrands')
-<form method="post" action="{{ url('/createvehical') }}" >  
+<form method="post" action="{{ url('/createvehical') }}" enctype="multipart/form-data" >  
     @csrf  
     <div class="col-sm-10">
             <div class="col-sm-12">

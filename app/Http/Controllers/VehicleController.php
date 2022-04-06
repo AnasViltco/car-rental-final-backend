@@ -15,7 +15,17 @@ class VehicleController extends Controller
 
     public function save(Request $request)
     {
-        $contact = Vehicle::create($request->all());
+        $request_data = $request->all();
+        if ($request->hasFile('image1')) {
+            $image = $request->file('image1');
+            $ext = $image->extension();
+            $image_name = time() . uniqid() . '.' . $ext;
+            $destinationPath = public_path() . '/images';
+            $image->move($destinationPath, $image_name);
+            $request_data['image1'] = $image_name;
+        }
+
+        $contact = Vehicle::create($request_data);
         return back();
         
     }
